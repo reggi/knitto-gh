@@ -14,7 +14,11 @@ state, and prints exact commands for propagation, approval, and merging.
 
 Knitto uses the existing authenticated GitHub CLI session for read-only access:
 
-```bash
+```
+
+Local fallback commands omit `--ref` by default so `knitto-gh update` resolves
+the latest template release when the printed command is actually run. An
+explicit propagation `--ref` remains pinned in the generated command.bash
 gh auth status
 ```
 

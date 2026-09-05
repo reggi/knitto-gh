@@ -41,8 +41,9 @@ export function workflowCommand(
 
 export function localCommands(
   repository: ManagedRepository,
-  template: TemplateIdentity,
+  _template: TemplateIdentity,
   workspace: string,
+  requestedRef?: string,
 ): CommandSpec[] {
   const checkout = path.join(workspace, ...repository.nameWithOwner.split("/"));
   return [
@@ -55,7 +56,9 @@ export function localCommands(
       args: [
         "--yes",
         "knitto-gh@latest",
-        ...(template.release ? ["--ref", template.release.tag] : []),
+        ...(requestedRef && requestedRef !== "latest"
+          ? ["--ref", requestedRef]
+          : []),
         "update",
         ".",
       ],
@@ -106,7 +109,7 @@ export async function propagate(
       repository,
       commands: useWorkflow
         ? [workflowCommand(repository, template)]
-        : localCommands(repository, template, workspace),
+        : localCommands(repository, template, workspace, options.ref),
       skipped: false,
     };
   });

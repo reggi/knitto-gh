@@ -178,12 +178,27 @@ test("local propagation delegates checkout preparation to knitto-gh update", () 
   assert.deepEqual(commands[1]?.args, [
     "--yes",
     "knitto-gh@latest",
+    "update",
+    ".",
+  ]);
+  assert.equal(commands.length, 2);
+});
+
+test("local propagation preserves an explicitly requested template ref", () => {
+  const commands = localCommands(
+    repository,
+    template,
+    "/tmp/work",
+    "v1.2.0",
+  );
+  assert.deepEqual(commands[1]?.args, [
+    "--yes",
+    "knitto-gh@latest",
     "--ref",
     "v1.2.0",
     "update",
     ".",
   ]);
-  assert.equal(commands.length, 2);
 });
 
 test("local propagation always uses the shared update operation", () => {
