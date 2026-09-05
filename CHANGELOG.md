@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/reggi/knitto-gh/compare/v0.2.1...v0.2.2) (2026-09-05)
+
+
+### Bug Fixes
+
+* prefer available update workflows ([24c0fbc](https://github.com/reggi/knitto-gh/commit/24c0fbc0a5b32f18bfba26e12e226d891254fb70))
+
 ## [0.2.1](https://github.com/reggi/knitto-gh/compare/v0.2.0...v0.2.1) (2026-09-05)
 
 
