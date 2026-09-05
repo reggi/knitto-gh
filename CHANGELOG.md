@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1](https://github.com/reggi/knitto-gh/compare/v0.2.0...v0.2.1) (2026-09-05)
+
+
+### Bug Fixes
+
+* bootstrap template engine upgrades locally ([a46e948](https://github.com/reggi/knitto-gh/commit/a46e948992b856471dc3fe72c9a35df412546b15))
+* resolve latest during local propagation ([cf492b6](https://github.com/reggi/knitto-gh/commit/cf492b69014feace4bb0fb1746f1707e9fe8233d))
+
 ## [0.2.0](https://github.com/reggi/knitto-gh/compare/v0.1.0...v0.2.0) (2026-09-05)
 
 
