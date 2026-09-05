@@ -183,8 +183,9 @@ knitto gh propagate --mode workflow
 knitto gh propagate --mode local
 ```
 
-`auto` uses a declared compatible workflow when present and prints a local
-clone/apply/push/PR sequence otherwise. After the first release, workflow
+`auto` uses a declared compatible workflow when present. When the workflow is
+missing, it prints only the commands to clone the repository and run
+`knitto-gh update` locally. After the first release, workflow
 propagation includes the immutable template tag:
 
 ```bash
@@ -194,14 +195,17 @@ gh workflow run .github/workflows/update-template.yml \
   -f ref=v1.0.0
 ```
 
-Local propagation prints commands that:
+Local propagation prints:
 
-1. Clone into the controlled Knitto cache.
-2. Create a revision-specific branch.
-3. Pin the new template tag.
-4. Run the exact template-required Knitto engine.
-5. Run repository quality checks.
-6. Commit, push, and open a marked pull request.
+```bash
+gh repo clone reggi/example ~/.cache/knitto-gh/worktrees/reggi/example
+(cd ~/.cache/knitto-gh/worktrees/reggi/example && \
+  npx --yes knitto-gh@latest --ref v1.0.0 update .)
+```
+
+The user reviews the resulting files and generated
+`.git/knitto-gh-pr-body`, then creates the branch, commit, and pull request
+using their normal Git workflow.
 
 Knitto prints this sequence but never runs it.
 

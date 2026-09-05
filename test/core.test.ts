@@ -175,20 +175,15 @@ test("local propagation delegates checkout preparation to knitto-gh update", () 
       "/tmp/work/reggi/railway-vikunja",
     ],
   });
-  assert.deepEqual(commands[2]?.args, [
+  assert.deepEqual(commands[1]?.args, [
     "--yes",
     "knitto-gh@latest",
     "--ref",
     "v1.2.0",
     "update",
-    "/tmp/work/reggi/railway-vikunja",
-    "--body-file",
-    "/tmp/work/reggi/railway-vikunja/.git/knitto-gh-pr-body",
+    ".",
   ]);
-  assert.equal(
-    commands.at(-1)?.args.includes("reggi/railway-vikunja"),
-    true,
-  );
+  assert.equal(commands.length, 2);
 });
 
 test("local propagation always uses the shared update operation", () => {
@@ -206,8 +201,8 @@ test("local propagation always uses the shared update operation", () => {
     template,
     "/tmp/work",
   );
-  assert.equal(commands[2]?.args.includes("update"), true);
-  assert.deepEqual(commands[2]?.args.slice(0, 2), [
+  assert.equal(commands[1]?.args.includes("update"), true);
+  assert.deepEqual(commands[1]?.args.slice(0, 2), [
     "--yes",
     "knitto-gh@latest",
   ]);

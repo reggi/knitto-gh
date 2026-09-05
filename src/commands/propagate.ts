@@ -13,10 +13,6 @@ import { fleetContext } from "./context.js";
 
 export type PropagationMode = "auto" | "workflow" | "local";
 
-function branchName(template: TemplateIdentity): string {
-  return `automation/update-knitto-${template.revision.slice(0, 12)}`;
-}
-
 export function workflowCommand(
   repository: ManagedRepository,
   template: TemplateIdentity,
@@ -49,19 +45,11 @@ export function localCommands(
   workspace: string,
 ): CommandSpec[] {
   const checkout = path.join(workspace, ...repository.nameWithOwner.split("/"));
-  const branch = branchName(template);
-  const commands: CommandSpec[] = [
+  return [
     {
       command: "gh",
       args: ["repo", "clone", repository.nameWithOwner, checkout],
     },
-    {
-      command: "git",
-      args: ["switch", "--create", branch, `origin/${repository.defaultBranch}`],
-      cwd: checkout,
-    },
-  ];
-  commands.push(
     {
       command: "npx",
       args: [
@@ -69,43 +57,11 @@ export function localCommands(
         "knitto-gh@latest",
         ...(template.release ? ["--ref", template.release.tag] : []),
         "update",
-        checkout,
-        "--body-file",
-        path.join(checkout, ".git", "knitto-gh-pr-body"),
+        ".",
       ],
       cwd: checkout,
     },
-    { command: "git", args: ["add", "--all"], cwd: checkout },
-    {
-      command: "git",
-      args: ["commit", "-m", "chore: update Knitto template"],
-      cwd: checkout,
-    },
-    {
-      command: "git",
-      args: ["push", "--set-upstream", "origin", branch],
-      cwd: checkout,
-    },
-    {
-      command: "gh",
-      args: [
-        "pr",
-        "create",
-        "--repo",
-        repository.nameWithOwner,
-        "--base",
-        repository.defaultBranch,
-        "--head",
-        branch,
-        "--title",
-        "chore: update Knitto template",
-        "--body-file",
-        path.join(checkout, ".git", "knitto-gh-pr-body"),
-      ],
-      cwd: checkout,
-    },
-  );
-  return commands;
+  ];
 }
 
 export async function propagate(
@@ -175,6 +131,15 @@ export async function propagate(
       console.log(`# ${batch.repository.nameWithOwner}`);
       if (batch.skipped) console.log("# skipped: workflow unavailable");
       for (const command of batch.commands) console.log(renderCommand(command));
+      if (
+        !batch.skipped &&
+        batch.commands.some(
+          (command) =>
+            command.command === "npx" && command.args.includes("update"),
+        )
+      ) {
+        console.log("# Review the local changes, then create a branch and pull request.");
+      }
     }
   }
 }
