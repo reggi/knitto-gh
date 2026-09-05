@@ -186,11 +186,9 @@ knitto gh propagate --mode local
 ```
 
 `auto` uses a declared compatible workflow when present. When the workflow is
-missing or the repository's pinned Knitto engine differs from the selected
-template engine, it prints only the commands to clone the repository and run
-`knitto-gh update` locally. This bootstraps engine and template-schema upgrades
-without asking an older workflow to parse a newer manifest. After the first
-release, workflow propagation includes the immutable template tag:
+missing, it prints only the commands to clone the repository and run
+`knitto-gh update` locally. After the first release, workflow propagation
+includes the immutable template tag:
 
 ```bash
 gh workflow run .github/workflows/update-template.yml \

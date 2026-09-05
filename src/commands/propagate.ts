@@ -67,20 +67,6 @@ export function localCommands(
   ];
 }
 
-export function canUseWorkflow(
-  repository: ManagedRepository,
-  template: TemplateIdentity,
-): boolean {
-  if (repository.classification !== "managed" || !template.workflow) {
-    return false;
-  }
-  if (!template.engine) return true;
-  return (
-    repository.config?.engine?.package === template.engine.package &&
-    repository.config.engine.version === template.engine.version
-  );
-}
-
 export async function propagate(
   options: GlobalOptions & {
     mode: PropagationMode;
@@ -113,7 +99,9 @@ export async function propagate(
     );
   const batches = targets.map((repository) => {
     const useWorkflow =
-      options.mode !== "local" && canUseWorkflow(repository, template);
+      options.mode !== "local" &&
+      repository.classification === "managed" &&
+      template.workflow;
     if (options.mode === "workflow" && !useWorkflow) {
       return { repository, commands: [] as CommandSpec[], skipped: true };
     }
