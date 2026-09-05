@@ -66,6 +66,20 @@ test("update prepares a checkout and writes reusable provenance", async () => {
 
     assert.equal(result.ref, "v1.2.0");
     assert.equal(result.revision, "a".repeat(40));
+    assert.equal(
+      commands
+        .filter((command) => command.command === "npx")
+        .every((command) =>
+          command.args
+            .slice(0, 4)
+            .every(
+              (argument, index) =>
+                argument ===
+                ["--yes", "--package=knitto@latest", "--", "knitto"][index],
+            ),
+        ),
+      true,
+    );
     assert.equal(commands.some((command) => command.args.includes("pin")), true);
     assert.equal(
       commands.some(

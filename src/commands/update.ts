@@ -118,7 +118,9 @@ export async function update(
       command: "npx",
       args: [
         "--yes",
-        "knitto@latest",
+        "--package=knitto@latest",
+        "--",
+        "knitto",
         "source",
         "set",
         initialConfig.source.url,
@@ -135,7 +137,9 @@ export async function update(
       command: "npx",
       args: [
         "--yes",
-        "knitto@latest",
+        "--package=knitto@latest",
+        "--",
+        "knitto",
         "source",
         "pin",
         project,
@@ -165,7 +169,9 @@ export async function update(
     command: "npx",
     args: [
       "--yes",
-      "knitto@latest",
+      "--package=knitto@latest",
+      "--",
+      "knitto",
       "apply",
       project,
       "--update",
