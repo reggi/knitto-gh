@@ -32,7 +32,7 @@ export interface RepositoryCacheState {
 export interface RepositoryCacheOptions {
   enabled: boolean;
   refresh: boolean;
-  ttlSeconds: number;
+  ttlSeconds?: number;
   directory?: string;
   now?: number;
 }
@@ -168,15 +168,17 @@ export async function readRepositoryCache(
     );
   }
 
-  const now = options.now ?? Date.now();
-  const ttlSeconds = state.complete
-    ? options.ttlSeconds
-    : Math.max(options.ttlSeconds, 86_400);
-  if (
-    !Number.isFinite(updatedAt) ||
-    now - updatedAt >= ttlSeconds * 1000
-  ) {
+  if (!Number.isFinite(updatedAt)) {
     return undefined;
+  }
+  if (options.ttlSeconds !== undefined) {
+    const now = options.now ?? Date.now();
+    const ttlSeconds = state.complete
+      ? options.ttlSeconds
+      : Math.max(options.ttlSeconds, 86_400);
+    if (now - updatedAt >= ttlSeconds * 1000) {
+      return undefined;
+    }
   }
   return state;
 }

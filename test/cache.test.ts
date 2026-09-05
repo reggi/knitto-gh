@@ -120,3 +120,39 @@ test("incomplete repository discovery remains resumable beyond result TTL", asyn
     await rm(root, { recursive: true, force: true });
   }
 });
+
+test("repository discovery cache does not expire by default", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "knitto-gh-cache-"));
+  const options = {
+    enabled: true,
+    refresh: false,
+    directory: path.join(root, "cache"),
+    now: Date.parse("2026-09-05T05:00:00.000Z"),
+  };
+  try {
+    await writeRepositoryCache(
+      "user:reggi archived:false",
+      ".github/workflows/update-template.yml",
+      {
+        complete: true,
+        pagesCompleted: 12,
+        repositories,
+      },
+      options,
+    );
+    assert.deepEqual(
+      await readRepositoryCache(
+        "user:reggi archived:false",
+        ".github/workflows/update-template.yml",
+        { ...options, now: options.now + 31_536_000_000 },
+      ),
+      {
+        complete: true,
+        pagesCompleted: 12,
+        repositories,
+      },
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});

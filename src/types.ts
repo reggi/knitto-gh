@@ -111,5 +111,5 @@ export interface GlobalOptions {
   verbose: boolean;
   cache: boolean;
   refresh: boolean;
-  cacheTtl: number;
+  cacheTtl?: number;
 }

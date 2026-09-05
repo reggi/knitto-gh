@@ -48,7 +48,7 @@ function globalOptions(command: Command): GlobalOptions {
     verbose: boolean;
     cache: boolean;
     refresh: boolean;
-    cacheTtl: number;
+    cacheTtl?: number;
   }>();
   return {
     ...(options.template ? { template: options.template } : {}),
@@ -63,7 +63,7 @@ function globalOptions(command: Command): GlobalOptions {
     verbose: options.verbose,
     cache: options.cache,
     refresh: options.refresh,
-    cacheTtl: options.cacheTtl,
+    ...(options.cacheTtl !== undefined ? { cacheTtl: options.cacheTtl } : {}),
   };
 }
 
@@ -88,9 +88,8 @@ const program = new Command()
   .option("--refresh", "bypass and replace cached repository discovery", false)
   .option(
     "--cache-ttl <seconds>",
-    "repository discovery cache lifetime",
+    "opt-in repository discovery cache lifetime",
     nonNegativeInteger,
-    3600,
   );
 
 program

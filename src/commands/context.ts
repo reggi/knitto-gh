@@ -35,7 +35,9 @@ export async function fleetContext(options: GlobalOptions) {
     cache: {
       enabled: options.cache,
       refresh: options.refresh,
-      ttlSeconds: options.cacheTtl,
+      ...(options.cacheTtl !== undefined
+        ? { ttlSeconds: options.cacheTtl }
+        : {}),
     },
     ...(progress ? { onProgress: progress } : {}),
   });

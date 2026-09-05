@@ -119,8 +119,8 @@ PR body containing exact Knitto provenance.
 ## Repository discovery cache
 
 Fleet discovery reads `.knitto.json`, `.knitto.lock`, and the declared update
-workflow from every candidate repository. Results are cached for one hour
-under:
+workflow from every candidate repository. Completed results remain cached
+until explicitly refreshed under:
 
 ```text
 ${XDG_CACHE_HOME:-$HOME/.cache}/knitto-gh/github/repositories/
@@ -139,10 +139,12 @@ knitto-gh --owner reggi --no-cache repos
 The cache is keyed by the exact GitHub repository query and declared workflow
 path. Discovery checkpoints repositories and the next GitHub cursor atomically
 after every successful page. An interrupted scan resumes from its last
-checkpoint for up to 24 hours; complete results use `--cache-ttl`. If GitHub
-rejects a saved cursor, discovery safely restarts from page one. Partial
+checkpoint. Complete results and partial checkpoints do not expire by default;
+`--cache-ttl` opts into expiration, while `--refresh` starts a fresh scan. If
+GitHub rejects a saved cursor, discovery safely restarts from page one. Partial
 checkpoints are never returned as complete fleet results. Use `--refresh`
-before an operation that must observe changes made moments earlier.
+before an operation that must observe newly created, renamed, archived, or
+deleted repositories.
 
 Useful global filters:
 
