@@ -14,11 +14,7 @@ state, and prints exact commands for propagation, approval, and merging.
 
 Knitto uses the existing authenticated GitHub CLI session for read-only access:
 
-```
-
-Local fallback commands omit `--ref` by default so `knitto-gh update` resolves
-the latest template release when the printed command is actually run. An
-explicit propagation `--ref` remains pinned in the generated command.bash
+```bash
 gh auth status
 ```
 
@@ -190,9 +186,11 @@ knitto gh propagate --mode local
 ```
 
 `auto` uses a declared compatible workflow when present. When the workflow is
-missing, it prints only the commands to clone the repository and run
-`knitto-gh update` locally. After the first release, workflow
-propagation includes the immutable template tag:
+missing or the repository's pinned Knitto engine differs from the selected
+template engine, it prints only the commands to clone the repository and run
+`knitto-gh update` locally. This bootstraps engine and template-schema upgrades
+without asking an older workflow to parse a newer manifest. After the first
+release, workflow propagation includes the immutable template tag:
 
 ```bash
 gh workflow run .github/workflows/update-template.yml \
@@ -206,8 +204,12 @@ Local propagation prints:
 ```bash
 gh repo clone reggi/example ~/.cache/knitto-gh/worktrees/reggi/example
 (cd ~/.cache/knitto-gh/worktrees/reggi/example && \
-  npx --yes knitto-gh@latest --ref v1.0.0 update .)
+  npx --yes knitto-gh@latest update .)
 ```
+
+Local fallback commands omit `--ref` by default so `knitto-gh update` resolves
+the latest template release when the printed command is actually run. An
+explicit propagation `--ref` remains pinned in the generated command.
 
 The user reviews the resulting files and generated
 `.git/knitto-gh-pr-body`, then creates the branch, commit, and pull request

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { pullMatchesTemplate } from "../src/github/pulls.js";
 import {
+  canUseWorkflow,
   localCommands,
   workflowCommand,
 } from "../src/commands/propagate.js";
@@ -162,6 +163,23 @@ test("workflow propagation passes the immutable release tag", () => {
       "ref=v1.2.0",
     ],
   });
+});
+
+test("auto propagation bootstraps engine upgrades locally", () => {
+  assert.equal(canUseWorkflow(repository, template), false);
+  assert.equal(
+    canUseWorkflow(
+      {
+        ...repository,
+        config: {
+          ...repository.config!,
+            engine: template.engine!,
+        },
+      },
+      template,
+    ),
+    true,
+  );
 });
 
 test("local propagation delegates checkout preparation to knitto-gh update", () => {
