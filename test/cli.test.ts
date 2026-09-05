@@ -172,7 +172,11 @@ process.exit(1);
       env,
     );
     assert.equal(propagated.status, 0, propagated.stderr);
-    assert.match(propagated.stdout, /ref=v1\.2\.0/);
+    assert.match(
+      propagated.stdout,
+      /gh workflow run \.github\/workflows\/update-template\.yml --repo reggi\/railway-vikunja --ref main/,
+    );
+    assert.doesNotMatch(propagated.stdout, /-f ref=/);
     const calls = (await readFile(log, "utf8"))
       .trim()
       .split("\n")
