@@ -1,6 +1,6 @@
 {
   "name": "knitto-gh",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "GitHub fleet orchestration for Knitto-managed repositories",
   "repository": {
     "type": "git",
