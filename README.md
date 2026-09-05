@@ -187,14 +187,13 @@ knitto gh propagate --mode local
 
 `auto` uses a declared compatible workflow when present. When the workflow is
 missing, it prints only the commands to clone the repository and run
-`knitto-gh update` locally. After the first release, workflow propagation
-includes the immutable template tag:
+`knitto-gh update` locally. Default workflow propagation lets the target
+workflow resolve the latest template release when it runs:
 
 ```bash
 gh workflow run .github/workflows/update-template.yml \
   --repo reggi/railway-vikunja \
-  --ref main \
-  -f ref=v1.0.0
+  --ref main
 ```
 
 Local propagation prints:
@@ -205,9 +204,9 @@ gh repo clone reggi/example ~/.cache/knitto-gh/worktrees/reggi/example
   npx --yes knitto-gh@latest update .)
 ```
 
-Local fallback commands omit `--ref` by default so `knitto-gh update` resolves
-the latest template release when the printed command is actually run. An
-explicit propagation `--ref` remains pinned in the generated command.
+Workflow and local fallback commands omit the template `ref` by default so
+the update resolves the latest release when the printed command is actually
+run. An explicit propagation `--ref` remains pinned in the generated command.
 
 The user reviews the resulting files and generated
 `.git/knitto-gh-pr-body`, then creates the branch, commit, and pull request

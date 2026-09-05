@@ -16,6 +16,7 @@ export type PropagationMode = "auto" | "workflow" | "local";
 export function workflowCommand(
   repository: ManagedRepository,
   template: TemplateIdentity,
+  requestedRef?: string,
 ): CommandSpec {
   const workflow = template.workflow?.workflow;
   if (!workflow) {
@@ -33,8 +34,12 @@ export function workflowCommand(
     "--ref",
     repository.defaultBranch,
   ];
-  if (template.release && template.workflow?.refInput) {
-    args.push("-f", `${template.workflow.refInput}=${template.release.tag}`);
+  if (
+    requestedRef &&
+    requestedRef !== "latest" &&
+    template.workflow?.refInput
+  ) {
+    args.push("-f", `${template.workflow.refInput}=${requestedRef}`);
   }
   return { command: "gh", args };
 }
@@ -108,7 +113,7 @@ export async function propagate(
     return {
       repository,
       commands: useWorkflow
-        ? [workflowCommand(repository, template)]
+        ? [workflowCommand(repository, template, options.ref)]
         : localCommands(repository, template, workspace, options.ref),
       skipped: false,
     };

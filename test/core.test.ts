@@ -147,8 +147,23 @@ test("renders copyable commands without using shell evaluation", () => {
   );
 });
 
-test("workflow propagation passes the immutable release tag", () => {
+test("workflow propagation resolves latest when the workflow runs", () => {
   assert.deepEqual(workflowCommand(repository, template), {
+    command: "gh",
+    args: [
+      "workflow",
+      "run",
+      ".github/workflows/update-template.yml",
+      "--repo",
+      "reggi/railway-vikunja",
+      "--ref",
+      "main",
+    ],
+  });
+});
+
+test("workflow propagation preserves an explicitly requested template ref", () => {
+  assert.deepEqual(workflowCommand(repository, template, "v1.2.0"), {
     command: "gh",
     args: [
       "workflow",
