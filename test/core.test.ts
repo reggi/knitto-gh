@@ -166,7 +166,22 @@ test("workflow propagation passes the immutable release tag", () => {
 });
 
 test("auto propagation bootstraps engine upgrades locally", () => {
-  assert.equal(canUseWorkflow(repository, template), false);
+  assert.equal(
+    canUseWorkflow(
+      {
+        ...repository,
+        config: {
+          ...repository.config!,
+          engine: {
+            package: "knitto",
+            version: "0.1.0",
+          },
+        },
+      },
+      template,
+    ),
+    false,
+  );
   assert.equal(
     canUseWorkflow(
       {
