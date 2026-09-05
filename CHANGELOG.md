@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/reggi/knitto-gh/compare/v0.2.3...v0.2.4) (2026-09-05)
+
+
+### Bug Fixes
+
+* invoke Knitto through npx package mode ([94f3cc5](https://github.com/reggi/knitto-gh/commit/94f3cc5158e4fce5442c6852d47e79c2b7ef27e6))
+
 ## [0.2.3](https://github.com/reggi/knitto-gh/compare/v0.2.2...v0.2.3) (2026-09-05)
 
 
